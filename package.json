@@ -9,7 +9,7 @@
 		"dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
 		"client": "npm start --prefix frontend",
 		"clientBuild": "cd frontend && npm run build && cd ../",
-		"install": "npm install && cd ./frontend && npm install && cd ../"
+		"all-install": "npm install && cd ./frontend && npm install && cd ../"
 	},
 	"author": "Jacob Nelson",
 	"license": "ISC",
