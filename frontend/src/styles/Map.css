@@ -1,0 +1,11 @@
+.leaflet-container {
+	height: 350px;
+}
+
+.leaflet-marker-icon,
+.leaflet-div-icon,
+.leaflet-editing-icon,
+.leaflet-touch-icon {
+	width: 10px !important;
+	height: 10px !important;
+}

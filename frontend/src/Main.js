@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { ConfigProvider } from "./utils/context";
 import "./styles/Main.css";
+const LeafletMap = React.lazy(() => import("./components/leafletMap"));
 
 const Main = () => {
 	const [isLoading, setIsLoading] = useState(true);
@@ -14,7 +16,9 @@ const Main = () => {
 				<div className="global-loader">Loading...</div>
 			) : (
 				<>
-					<h1>Le Main.js</h1>
+					<ConfigProvider>
+						<LeafletMap />
+					</ConfigProvider>
 				</>
 			)}
 		</div>

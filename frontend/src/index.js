@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
+import "./styles/normalize.css";
 const Main = React.lazy(() => import("./Main"));
 
 ReactDOM.render(
