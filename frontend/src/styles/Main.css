@@ -1,5 +1,15 @@
 :root {
+	--black: #2c3338;
+	--dark-blue: #2d3e50;
+	--medium-blue: #425b73;
+	--light-blue: #1ebca5;
+	--light-gray: #eaf0f6;
 	--white: #f9fbfd;
+	--orange: #f97600;
+	--light-pink: #ea4c88;
+	--green: #28a745;
+	--red: #dc3545;
+	--yellow: #fd0;
 }
 
 *,

@@ -6,6 +6,13 @@
 .leaflet-div-icon,
 .leaflet-editing-icon,
 .leaflet-touch-icon {
-	width: 10px !important;
-	height: 10px !important;
+	width: 8px !important;
+	height: 8px !important;
+}
+
+path.leaflet-interactive {
+	stroke-width: 2 !important;
+	fill-opacity: 0.01 !important;
+	stroke: var(--red) !important;
+	stroke-opacity: 0.6 !important;
 }
