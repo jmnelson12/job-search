@@ -4,25 +4,25 @@ import "./styles/Main.css";
 const LeafletMap = React.lazy(() => import("./components/leafletMap"));
 
 const Main = () => {
-	const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
 
-	useEffect(() => {
-		setIsLoading(false);
-	}, []);
+    useEffect(() => {
+        setIsLoading(false);
+    }, []);
 
-	return (
-		<div className="Main">
-			{isLoading ? (
-				<div className="global-loader">Loading...</div>
-			) : (
-				<>
-					<ConfigProvider>
-						<LeafletMap />
-					</ConfigProvider>
-				</>
-			)}
-		</div>
-	);
+    return (
+        <div className="Main">
+            {isLoading ? (
+                <div className="global-loader">Loading...</div>
+            ) : (
+                <>
+                    <ConfigProvider>
+                        <LeafletMap />
+                    </ConfigProvider>
+                </>
+            )}
+        </div>
+    );
 };
 
 export default Main;

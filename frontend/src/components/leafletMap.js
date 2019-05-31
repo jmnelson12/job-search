@@ -1,7 +1,8 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { Map, TileLayer, FeatureGroup } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import { setCursor } from "../utils/utils";
+import { locationApi } from "../utils/api";
 import Consumer from "../utils/context";
 import "../styles/Map.css";
 
@@ -13,10 +14,24 @@ const mapInfo = {
 };
 
 const LeafletMap = () => {
-    const [points, setPoints] = useState([]);
     const editRef = useRef(null);
 
     // General Functions
+    const rebuildKMLString = points => {
+        let coordsString = "";
+        if (points && points.length !== 0) {
+            for (let i = 0, len = points.length; i < len; i++) {
+                coordsString += points[i].lng + "," + points[i].lat + ",0 ";
+            }
+            coordsString += points[0].lng + "," + points[0].lat + ",0 ";
+        }
+
+        locationApi.getZipCodes(coordsString).then(res => {
+            console.log(res);
+        });
+        // set zip codes
+        // newRequest = true;
+    };
     const clearMap = () => {
         try {
             const layerContainer =
@@ -36,36 +51,30 @@ const LeafletMap = () => {
             console.error(e);
         }
     };
-    const getLatLngs = (e, type) => {
-        type = type.toUpperCase();
-        let _latlngs = null;
-        switch (type) {
-            case "CREATE":
-                _latlngs = e.layer._latlngs;
-                break;
-            case "EDIT":
-                const { _layers } = e.layers;
-                try {
-                    _latlngs = _layers[Object.keys(_layers)[0]]._latlngs;
-                } catch (e) {
-                    _latlngs = null;
-                }
-                break;
-            default:
-                break;
-        }
-        return _latlngs;
-    };
 
     // Event Functions
     const handleCreate = e => {
-        const latlngs = getLatLngs(e, "CREATE");
-        if (latlngs) {
-            setPoints(latlngs);
-        } else {
+        try {
+            rebuildKMLString(e.layer._latlngs[0]);
+        } catch (e) {
             clearMap();
             // global error
         }
+    };
+    const handleEdit = e => {
+        try {
+            const { _layers } = e.layers;
+            let _latlngs = _layers[Object.keys(_layers)[0]]._latlngs;
+
+            rebuildKMLString(_latlngs[0]);
+        } catch (e) {
+            clearMap();
+            // global error
+        }
+    };
+    const handleDelete = e => {
+        clearMap();
+        rebuildKMLString([]);
     };
     const handleDrawStart = e => {
         setCursor(".leaflet-container", "crosshair");
@@ -73,18 +82,6 @@ const LeafletMap = () => {
     };
     const handleDrawStop = e => {
         setCursor(".leaflet-container", "grab");
-    };
-    const handleEdit = e => {
-        const latlngs = getLatLngs(e, "EDIT");
-        if (latlngs) {
-            setPoints(latlngs);
-        } else {
-            clearMap();
-            // global error
-        }
-    };
-    const handleDelete = e => {
-        clearMap();
     };
 
     return (
