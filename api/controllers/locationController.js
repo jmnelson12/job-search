@@ -2,17 +2,19 @@ const { callToFreeMapTools } = require("../../lib/freeMapTools");
 
 module.exports = {
     getZipCodes: async (req, res) => {
-        try {
-            const { kmlString } = req.query;
+        const { kmlString } = req.query;
+        // return await callToFreeMapTools(kmlString);
+        let grabZips = await callToFreeMapTools(kmlString);
 
-            return res.send(await callToFreeMapTools(kmlString));
-        } catch (e) {
-            return res.send({
-                success: false,
-                message: "Server Error",
-                payload: e
-            });
-        }
+        console.log("-----");
+        console.log(grabZips);
+        console.log("-----");
+
+        return res.send({
+            success: true,
+            message: "Success",
+            payload: { a: "oi" }
+        });
 
         // try {
         //     console.log("before");

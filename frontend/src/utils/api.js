@@ -5,13 +5,11 @@ const locationApi = (() => {
      * @param {string} kmlString
      */
     const getZipCodes = async kmlString => {
-        console.log(kmlString);
-
         try {
             const CancelToken = axios.CancelToken;
             let cancelRequest;
 
-            const test = await axios.get("/api/getZipCodes", {
+            return await axios.get("/api/getZipCodes", {
                 params: {
                     kmlString
                 },
@@ -19,7 +17,9 @@ const locationApi = (() => {
                     cancelRequest = c;
                 })
             });
-        } catch (e) {}
+        } catch (e) {
+            // global error
+        }
     };
 
     return {
