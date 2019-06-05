@@ -1,7 +1,7 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Map, TileLayer, FeatureGroup } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
-import { setCursor } from "../utils/utils";
+import { setCursor, getUniqueValues } from "../utils/utils";
 import { locationApi } from "../utils/api";
 import Consumer from "../utils/context";
 import "../styles/Map.css";
@@ -14,10 +14,25 @@ const mapInfo = {
 };
 
 const LeafletMap = () => {
+    const [isCallingForLocs, setIsCallingForLocs] = useState(false);
     const editRef = useRef(null);
 
     // General Functions
-    const rebuildKMLString = points => {
+    const runLocationSearch = async (coordsString, ctx) => {
+        await locationApi.getLocationInfo(coordsString, ctx).then(res => {
+            const { payload, message, success } = res.data;
+
+            if (success) {
+                ctx.setLocationData(getUniqueValues(payload, "zipcode"));
+            } else {
+                ctx.setGlobalMessage({
+                    type: "danger",
+                    message
+                });
+            }
+        });
+    };
+    const rebuildKMLString = (points, ctx) => {
         let coordsString = "";
         if (points && points.length !== 0) {
             for (let i = 0, len = points.length; i < len; i++) {
@@ -26,13 +41,10 @@ const LeafletMap = () => {
             coordsString += points[0].lng + "," + points[0].lat + ",0 ";
         }
 
-        locationApi.getZipCodes(coordsString).then(res => {
-            console.log(res);
-        });
-        // set zip codes
-        // newRequest = true;
+        // setIsCallingForLocs(true);
+        runLocationSearch(coordsString, ctx);
     };
-    const clearMap = () => {
+    const clearMap = ctx => {
         try {
             const layerContainer =
                 editRef.current.leafletElement.options.edit.featureGroup;
@@ -47,38 +59,32 @@ const LeafletMap = () => {
                 });
             }
         } catch (e) {
-            // Global Error
             console.error(e);
+            ctx.setGlobalMessage({
+                type: "danger",
+                message:
+                    "Error Clearing Map. Please refresh the page and try again. Sorry for the inconvenience."
+            });
         }
     };
 
     // Event Functions
-    const handleCreate = e => {
-        try {
-            rebuildKMLString(e.layer._latlngs[0]);
-        } catch (e) {
-            clearMap();
-            // global error
-        }
+    const handleCreate = (e, ctx) => {
+        rebuildKMLString(e.layer._latlngs[0], ctx);
     };
-    const handleEdit = e => {
-        try {
-            const { _layers } = e.layers;
-            let _latlngs = _layers[Object.keys(_layers)[0]]._latlngs;
+    const handleEdit = (e, ctx) => {
+        const { _layers } = e.layers;
+        let _latlngs = _layers[Object.keys(_layers)[0]]._latlngs;
 
-            rebuildKMLString(_latlngs[0]);
-        } catch (e) {
-            clearMap();
-            // global error
-        }
+        rebuildKMLString(_latlngs[0], ctx);
     };
-    const handleDelete = e => {
-        clearMap();
-        rebuildKMLString([]);
+    const handleDelete = (e, ctx) => {
+        clearMap(ctx);
+        rebuildKMLString([], ctx);
     };
-    const handleDrawStart = e => {
+    const handleDrawStart = (e, ctx) => {
         setCursor(".leaflet-container", "crosshair");
-        clearMap();
+        clearMap(ctx);
     };
     const handleDrawStop = e => {
         setCursor(".leaflet-container", "grab");
@@ -97,10 +103,18 @@ const LeafletMap = () => {
                             <EditControl
                                 ref={editRef}
                                 position="topright"
-                                onCreated={handleCreate}
-                                onEdited={handleEdit}
-                                onDeleted={handleDelete}
-                                onDrawStart={handleDrawStart}
+                                onCreated={e => {
+                                    handleCreate(e, ctx);
+                                }}
+                                onEdited={e => {
+                                    handleEdit(e, ctx);
+                                }}
+                                onDeleted={e => {
+                                    handleDelete(e, ctx);
+                                }}
+                                onDrawStart={e => {
+                                    handleDrawStart(e, ctx);
+                                }}
                                 onDrawStop={handleDrawStop}
                                 draw={{
                                     rectangle: false,
