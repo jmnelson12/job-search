@@ -14,7 +14,6 @@ const mapInfo = {
 };
 
 const LeafletMap = () => {
-    const [isCallingForLocs, setIsCallingForLocs] = useState(false);
     const editRef = useRef(null);
 
     // General Functions
