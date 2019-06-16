@@ -7,10 +7,13 @@ const sslRedirect = require("heroku-ssl-redirect");
 const cors = require("cors");
 
 const app = express();
+const server = require("http").Server(app);
 const isDev = process.env.NODE_ENV !== "production";
 const port = process.env.PORT || 8080;
 const locationRoutes = require("./api/routes/locationRoutes");
 const jobRoutes = require("./api/routes/jobSearchRoutes");
+const io = require("socket.io").listen(server);
+const sockets = require("./lib/socket")(io);
 
 // Middleware
 app.use(favicon(__dirname + "/frontend/build/favicon.ico"));
@@ -38,4 +41,4 @@ if (!isDev) {
     });
 }
 
-app.listen(port, () => console.log(`Server started on port: ${port}`));
+server.listen(port, () => console.log(`Server started on port: ${port}`));
