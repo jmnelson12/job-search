@@ -10,6 +10,5 @@ router.route("/getGlassdoorJobs").get(jobSearchCtrl.getGlassdoorJobs);
 router.route("/getGoogleJobs").get(jobSearchCtrl.getGoogleJobs);
 router.route("/getIndeedJobs").get(jobSearchCtrl.getIndeedJobs);
 router.route("/getLinkedinJobs").get(jobSearchCtrl.getLinkedinJobs);
-router.route("/getZipRecruiterJobs").get(jobSearchCtrl.getZipRecruiterJobs);
 
 module.exports = router;

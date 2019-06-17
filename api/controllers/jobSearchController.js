@@ -2,9 +2,37 @@ const Glassdoor = require("../../lib/glassdoor");
 const GoogleJobs = require("../../lib/googleJobs");
 const Indeed = require("../../lib/indeed");
 const Linkedin = require("../../lib/linkedin");
-const ZipRecruiter = require("../../lib/zipRecruiter");
 
-const getGlassdoorJobs = async function(req, res) {};
+const getGlassdoorJobs = async function(req, res) {
+    try {
+        const { query, zipcodes, radius } = req.query;
+        let zipArray = zipcodes.split(",").map(zipStr => parseInt(zipStr));
+        if (zipArray.length === 0) throw "FAILURE";
+
+        if (zipArray.length > 30) {
+            zipArray = zipArray.slice(29);
+        }
+
+        const jobs = Glassdoor.fetchGlassdoorJobs({
+            query,
+            zipcodes: zipArray,
+            radius
+        });
+
+        return res.send({
+            success: true,
+            message: "Success",
+            company: "Indeed",
+            payload: jobs
+        });
+    } catch (e) {
+        console.error(e);
+        return res.send({
+            success: false,
+            messaage: "Error Fetching Indeed Jobs. Please try again."
+        });
+    }
+};
 const getGoogleJobs = async function(req, res) {};
 const getIndeedJobs = async function(req, res) {
     try {
@@ -63,21 +91,18 @@ const getLinkedinJobs = async function(req, res) {
         });
     }
 };
-const getZipRecruiterJobs = async function(req, res) {};
 const getAllJobs = async function(req, res) {
     try {
         const [
             glassdoorJobs,
             googleJobs,
             indeedJobs,
-            linkedinJobs,
-            zipRecruiterJobs
+            linkedinJobs
         ] = await Promise.all([
             getGlassdoorJobs(req, res),
             getGoogleJobs(req, res),
             getIndeedJobs(req, res),
-            getLinkedinJobs(req, res),
-            getZipRecruiterJobs(req, res)
+            getLinkedinJobs(req, res)
         ]);
 
         return res.send({
@@ -86,8 +111,7 @@ const getAllJobs = async function(req, res) {
                 glassdoorJobs,
                 googleJobs,
                 indeedJobs,
-                linkedinJobs,
-                zipRecruiterJobs
+                linkedinJobs
             }
         });
     } catch (e) {
@@ -103,6 +127,5 @@ module.exports = {
     getGoogleJobs: getGoogleJobs,
     getIndeedJobs: getIndeedJobs,
     getLinkedinJobs: getLinkedinJobs,
-    getZipRecruiterJobs: getZipRecruiterJobs,
     getAllJobs: getAllJobs
 };
