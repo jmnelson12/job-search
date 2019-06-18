@@ -13,7 +13,7 @@ const getGlassdoorJobs = async function(req, res) {
             zipArray = zipArray.slice(29);
         }
 
-        const jobs = Glassdoor.fetchGlassdoorJobs({
+        const jobs = await Glassdoor.fetchGlassdoorJobs({
             query,
             zipcodes: zipArray,
             radius
@@ -22,7 +22,7 @@ const getGlassdoorJobs = async function(req, res) {
         return res.send({
             success: true,
             message: "Success",
-            company: "Indeed",
+            company: "Glassdoor",
             payload: jobs
         });
     } catch (e) {
