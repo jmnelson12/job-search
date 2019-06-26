@@ -1,16 +1,20 @@
 const Glassdoor = require("../../lib/glassdoor");
-const GoogleJobs = require("../../lib/googleJobs");
 const Indeed = require("../../lib/indeed");
 const Linkedin = require("../../lib/linkedin");
+const {
+    BASE_JOB_SITE_DATA,
+    sliceArray,
+    getZipIntArrayFromString
+} = require("../../lib/utils");
 
 const getGlassdoorJobs = async function(req, res) {
     try {
         const { query, zipcodes, radius } = req.query;
-        let zipArray = zipcodes.split(",").map(zipStr => parseInt(zipStr));
+        let zipArray = getZipIntArrayFromString(zipcodes);
         if (zipArray.length === 0) throw "FAILURE";
 
         if (zipArray.length > 30) {
-            zipArray = zipArray.slice(29);
+            zipArray = sliceArray(zipArray, 0, 29);
         }
 
         const jobs = await Glassdoor.fetchGlassdoorJobs({
@@ -29,19 +33,18 @@ const getGlassdoorJobs = async function(req, res) {
         console.error(e);
         return res.send({
             success: false,
-            messaage: "Error Fetching Indeed Jobs. Please try again."
+            messaage: "Error Fetching Glassdoor Jobs. Please try again."
         });
     }
 };
-const getGoogleJobs = async function(req, res) {};
 const getIndeedJobs = async function(req, res) {
     try {
         const { query, zipcodes, radius } = req.query;
-        let zipArray = zipcodes.split(",").map(zipStr => parseInt(zipStr));
+        let zipArray = getZipIntArrayFromString(zipcodes);
         if (zipArray.length === 0) throw "FAILURE";
 
         if (zipArray.length > 30) {
-            zipArray = zipArray.slice(29);
+            zipArray = sliceArray(zipArray, 0, 29);
         }
 
         const jobs = await Indeed.fetchIndeedJobs({
@@ -66,11 +69,11 @@ const getIndeedJobs = async function(req, res) {
 const getLinkedinJobs = async function(req, res) {
     try {
         const { query, zipcodes } = req.query;
-        let zipArray = zipcodes.split(",").map(zipStr => parseInt(zipStr));
+        let zipArray = getZipIntArrayFromString(zipcodes);
         if (zipArray.length === 0) throw "FAILURE";
 
         if (zipArray.length > 30) {
-            zipArray = zipArray.slice(29);
+            zipArray = sliceArray(zipArray, 0, 29);
         }
 
         const jobs = await Linkedin.fetchLinkedinJobs({
@@ -87,31 +90,66 @@ const getLinkedinJobs = async function(req, res) {
         console.error(e);
         return res.send({
             success: false,
-            messaage: "Error Fetching Indeed Jobs. Please try again."
+            messaage: "Error Fetching Linkedin Jobs. Please try again."
         });
     }
 };
 const getAllJobs = async function(req, res) {
     try {
-        const [
-            glassdoorJobs,
-            googleJobs,
-            indeedJobs,
-            linkedinJobs
-        ] = await Promise.all([
-            getGlassdoorJobs(req, res),
-            getGoogleJobs(req, res),
-            getIndeedJobs(req, res),
-            getLinkedinJobs(req, res)
+        const { query, zipcodes, radius } = req.query;
+
+        let zipArray = getZipIntArrayFromString(zipcodes);
+        if (zipArray.length === 0) throw "FAILURE";
+
+        if (zipArray.length > 30) {
+            zipArray = sliceArray(zipArray, 0, 29);
+        }
+
+        const [glassdoorJobs, indeedJobs, linkedinJobs] = await Promise.all([
+            await Glassdoor.fetchGlassdoorJobs({
+                query,
+                zipcodes: zipArray,
+                radius
+            }),
+            await Indeed.fetchIndeedJobs({
+                query,
+                zipcodes: zipArray,
+                radius
+            }),
+            await Linkedin.fetchLinkedinJobs({
+                query,
+                zipcodes: zipArray
+            })
         ]);
+
+        const glassdoorJobLength = glassdoorJobs.length;
+        const indeedJobLength = indeedJobs.length;
+        const linkedinJobLength = linkedinJobs.length;
 
         return res.send({
             success: true,
             payload: {
-                glassdoorJobs,
-                googleJobs,
-                indeedJobs,
-                linkedinJobs
+                totalResults:
+                    glassdoorJobLength + indeedJobLength + linkedinJobLength,
+                query,
+                zipArray,
+                zipcodesSeached: zipArray.length,
+                radius,
+                glassdoor: {
+                    jobCount: glassdoorJobLength,
+                    siteData: BASE_JOB_SITE_DATA.glassdoor,
+                    jobListings: glassdoorJobs
+                },
+                indeed: {
+                    jobCount: indeedJobLength,
+                    siteData: BASE_JOB_SITE_DATA.indeed,
+                    jobListings: indeedJobs
+                },
+                linkedinJobs: {
+                    jobCount: linkedinJobLength,
+                    siteData: BASE_JOB_SITE_DATA.linkedin,
+                    jobListings: linkedinJobs
+                }
             }
         });
     } catch (e) {
@@ -124,7 +162,6 @@ const getAllJobs = async function(req, res) {
 
 module.exports = {
     getGlassdoorJobs: getGlassdoorJobs,
-    getGoogleJobs: getGoogleJobs,
     getIndeedJobs: getIndeedJobs,
     getLinkedinJobs: getLinkedinJobs,
     getAllJobs: getAllJobs
