@@ -22,7 +22,6 @@ const LeafletMap = () => {
             const { payload, message, success } = res.data;
 
             if (success) {
-                console.log(payload);
                 ctx.setLocationData(getUniqueValues(payload, "zipcode"));
             } else {
                 ctx.setGlobalMessage({
