@@ -13,8 +13,8 @@ const getGlassdoorJobs = async function(req, res) {
         let zipArray = getZipIntArrayFromString(zipcodes);
         if (zipArray.length === 0) throw "FAILURE";
 
-        if (zipArray.length > 30) {
-            zipArray = sliceArray(zipArray, 0, 29);
+        if (zipArray.length > 39) {
+            zipArray = sliceArray(zipArray, 0, 40);
         }
 
         const jobs = await Glassdoor.fetchGlassdoorJobs({
@@ -43,8 +43,8 @@ const getIndeedJobs = async function(req, res) {
         let zipArray = getZipIntArrayFromString(zipcodes);
         if (zipArray.length === 0) throw "FAILURE";
 
-        if (zipArray.length > 30) {
-            zipArray = sliceArray(zipArray, 0, 29);
+        if (zipArray.length > 39) {
+            zipArray = sliceArray(zipArray, 0, 40);
         }
 
         const jobs = await Indeed.fetchIndeedJobs({
@@ -72,8 +72,8 @@ const getLinkedinJobs = async function(req, res) {
         let zipArray = getZipIntArrayFromString(zipcodes);
         if (zipArray.length === 0) throw "FAILURE";
 
-        if (zipArray.length > 30) {
-            zipArray = sliceArray(zipArray, 0, 29);
+        if (zipArray.length > 39) {
+            zipArray = sliceArray(zipArray, 0, 40);
         }
 
         const jobs = await Linkedin.fetchLinkedinJobs({
@@ -98,11 +98,12 @@ const getAllJobs = async function(req, res) {
     try {
         const { query, zipcodes, radius } = req.query;
 
-        let zipArray = getZipIntArrayFromString(zipcodes);
+        // let zipArray = getZipIntArrayFromString(zipcodes);
+        let zipArray = zipcodes;
         if (zipArray.length === 0) throw "FAILURE";
 
-        if (zipArray.length > 30) {
-            zipArray = sliceArray(zipArray, 0, 29);
+        if (zipArray.length > 39) {
+            zipArray = sliceArray(zipArray, 0, 40);
         }
 
         const [glassdoorJobs, indeedJobs, linkedinJobs] = await Promise.all([

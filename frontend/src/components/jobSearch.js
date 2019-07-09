@@ -1,8 +1,7 @@
 import React from "react";
 
 const JobSearch = ({
-    query,
-    radius,
+    values,
     handleQueryInputChange,
     handleRadiusChange,
     handleSubmit
@@ -14,7 +13,7 @@ const JobSearch = ({
                     type="text"
                     id="txtJobSearch"
                     placeholder={"Search Jobs..."}
-                    value={query}
+                    value={values.query}
                     onChange={handleQueryInputChange}
                 />
             </div>
@@ -23,11 +22,9 @@ const JobSearch = ({
                     onChange={handleRadiusChange}
                     name="selRadius"
                     id="selRadius"
-                    defaultValue={radius}>
+                    defaultValue={values.radius}>
                     <option value="5">5</option>
                     <option value="10">10</option>
-                    <option value="15">15</option>
-                    <option value="25">25</option>
                 </select>
             </div>
             <div className="input-group">

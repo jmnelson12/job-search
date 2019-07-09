@@ -1,7 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { Map, TileLayer, FeatureGroup } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
-import { setCursor, getUniqueValues } from "../utils/utils";
+import {
+    setCursor,
+    getUniqueArrValues,
+    getUniqueObjValues
+} from "../utils/utils";
 import { locationApi } from "../utils/api";
 import Consumer from "../utils/context";
 import "../styles/Map.css";
@@ -22,7 +26,15 @@ const LeafletMap = () => {
             const { payload, message, success } = res.data;
 
             if (success) {
-                ctx.setLocationData(getUniqueValues(payload, "zipcode"));
+                const locDataObj = getUniqueObjValues(
+                    payload.locData,
+                    "zipcode"
+                );
+                const zipArr = getUniqueArrValues(payload.allZips);
+                ctx.setLocationData({
+                    allZips: zipArr,
+                    locData: locDataObj
+                });
             } else {
                 ctx.setGlobalMessage({
                     type: "danger",

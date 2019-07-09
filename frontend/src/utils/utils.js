@@ -15,7 +15,7 @@ function setCursor(elString, type) {
  * @param {array} arr
  * @param {string} compare
  */
-function getUniqueValues(arr, compare) {
+function getUniqueObjValues(arr, compare) {
     const unique = arr
         .map(e => e[compare])
         .map((e, i, final) => final.indexOf(e) === i && i)
@@ -25,4 +25,10 @@ function getUniqueValues(arr, compare) {
     return unique;
 }
 
-export { setCursor, getUniqueValues };
+function getUniqueArrValues(arr) {
+    return arr.filter((value, i, self) => {
+        return self.indexOf(value) === i;
+    });
+}
+
+export { setCursor, getUniqueObjValues, getUniqueArrValues };

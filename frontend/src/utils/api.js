@@ -33,4 +33,30 @@ const locationApi = (() => {
     };
 })();
 
-export { locationApi };
+const jobSearchApi = (() => {
+    const getAllJobs = async (q, zips, r, ctx) => {
+        try {
+            return await axios.get("/api/getAllJobs", {
+                params: {
+                    query: q,
+                    zipcodes: zips,
+                    radius: r
+                }
+            });
+        } catch (e) {
+            // global error
+            console.error(e);
+            ctx.setGlobalMessage({
+                type: "danger",
+                message:
+                    "Error Grabbing All Jobs. Please refresh the page and try again. Sorry for the inconvenience."
+            });
+        }
+    };
+
+    return {
+        getAllJobs
+    };
+})();
+
+export { locationApi, jobSearchApi };

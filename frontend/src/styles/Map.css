@@ -1,18 +1,22 @@
 .leaflet-container {
-	height: 350px;
+    height: 385px;
+    width: 100%;
+    margin: 0 auto 15px;
+    border-radius: 3px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
 }
 
 .leaflet-marker-icon,
 .leaflet-div-icon,
 .leaflet-editing-icon,
 .leaflet-touch-icon {
-	width: 8px !important;
-	height: 8px !important;
+    width: 8px !important;
+    height: 8px !important;
 }
 
 path.leaflet-interactive {
-	stroke-width: 2 !important;
-	fill-opacity: 0.01 !important;
-	stroke: var(--red) !important;
-	stroke-opacity: 0.6 !important;
+    stroke-width: 2 !important;
+    fill-opacity: 0.01 !important;
+    stroke: var(--red) !important;
+    stroke-opacity: 0.6 !important;
 }

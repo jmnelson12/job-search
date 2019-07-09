@@ -31,6 +31,12 @@ body {
 #root,
 .Main {
     width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
     height: 100%;
     position: relative;
+}
+
+.Main {
+    padding-top: 15px;
 }

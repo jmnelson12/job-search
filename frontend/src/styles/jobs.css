@@ -1,0 +1,9 @@
+.job-search-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-flow: row wrap;
+}
+
+.job-search-wrapper .input-group {
+    margin: 5px;
+}
