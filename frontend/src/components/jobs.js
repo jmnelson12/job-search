@@ -9,11 +9,16 @@ const JobResults = React.lazy(() => import("./jobResults"));
 const Jobs = () => {
     const [query, setQuery] = useState("Full Stack Developer");
     const [radius, setRadius] = useState("5");
-    const [isLoading, setIsLoading] = useState(true);
-    const [jobsPayload, setJobsPayload] = useState(null);
+    const [jobResultsState, setJobResultsState] = useState({
+        isLoading: true,
+        jobsPayload: null
+    });
 
     useEffect(() => {
-        setIsLoading(false);
+        setJobResultsState({
+            isLoading: false,
+            jobsPayload: null
+        });
     }, []);
 
     const handleQueryInputChange = e => {
@@ -23,19 +28,27 @@ const Jobs = () => {
         setRadius(e.target.value);
     };
     const handleSubmit = (e, ctx) => {
-        setIsLoading(true);
+        setJobResultsState({
+            isLoading: true,
+            jobsPayload: null
+        });
         jobSearchApi
             .getAllJobs(query, ctx.locationData.allZips, radius, ctx)
             .then(res => {
                 const { data } = res;
 
                 if (res.statusText === "OK" && data.success) {
-                    setJobsPayload(data.payload);
+                    setJobResultsState({
+                        isLoading: false,
+                        jobsPayload: data.payload
+                    });
                 } else {
                     // set global error
-                    setJobsPayload(null);
+                    setJobResultsState({
+                        isLoading: false,
+                        jobsPayload: null
+                    });
                 }
-                setIsLoading(false);
             });
     };
 
@@ -53,10 +66,7 @@ const Jobs = () => {
                                     handleSubmit(e, ctx);
                                 }}
                             />
-                            <JobResults
-                                jobsPayload={jobsPayload}
-                                isLoading={isLoading}
-                            />
+                            <JobResults state={jobResultsState} />
                         </>
                     );
                 }}
