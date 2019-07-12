@@ -7,3 +7,8 @@
 .job-search-wrapper .input-group {
     margin: 5px;
 }
+
+img.logo {
+    max-width: 165px;
+    border-radius: 2px;
+}
