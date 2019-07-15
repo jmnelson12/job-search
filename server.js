@@ -32,7 +32,7 @@ app.use("/api", jobRoutes);
 
 // For production
 if (!isDev) {
-    app.use(sslRedirect());
+    // app.use(sslRedirect());
     app.use(express.static(__dirname));
     app.use(express.static(path.join(__dirname, "frontend", "build")));
 
