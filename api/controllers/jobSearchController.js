@@ -102,8 +102,8 @@ const getAllJobs = async function(req, res) {
         let zipArray = zipcodes;
         if (zipArray.length === 0) throw "FAILURE";
 
-        if (zipArray.length > 39) {
-            zipArray = sliceArray(zipArray, 0, 40);
+        if (zipArray.length > 29) {
+            zipArray = sliceArray(zipArray, 0, 30);
         }
 
         const [glassdoorJobs, indeedJobs, linkedinJobs] = await Promise.all([

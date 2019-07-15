@@ -35,6 +35,8 @@ const locationApi = (() => {
 
 const jobSearchApi = (() => {
     const getAllJobs = async (q, zips, r, ctx) => {
+        console.log(q, zips, r);
+
         try {
             return await axios.get("/api/getAllJobs", {
                 params: {

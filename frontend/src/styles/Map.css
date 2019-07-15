@@ -16,7 +16,7 @@
 
 path.leaflet-interactive {
     stroke-width: 2 !important;
-    fill-opacity: 0.01 !important;
-    stroke: var(--red) !important;
-    stroke-opacity: 0.6 !important;
+    fill-opacity: 0.08 !important;
+    stroke: var(--black) !important;
+    stroke-opacity: 0.9 !important;
 }

@@ -16,7 +16,7 @@ const JobItem = ({ jobData }) => {
             </div>
             <div className="job-listings-wrapper">
                 <div className="total-site-jobs">
-                    <p className="site-jobs-found">{jobData.jobCount}</p>
+                    <p className="site-jobs-found">Individual Site Results: {jobData.jobCount}</p>
                     <ul className="job-listings">
                         {jobData.jobListings.map((job, key) => (
                             <li className="listing" key={key}>
