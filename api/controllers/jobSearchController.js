@@ -1,20 +1,18 @@
 const Glassdoor = require("../../lib/glassdoor");
 const Indeed = require("../../lib/indeed");
 const Linkedin = require("../../lib/linkedin");
-const {
-    BASE_JOB_SITE_DATA,
-    sliceArray,
-    getZipIntArrayFromString
-} = require("../../lib/utils");
+const { BASE_JOB_SITE_DATA, sliceArray } = require("../../lib/utils");
 
 const getGlassdoorJobs = async function(req, res) {
     try {
         const { query, zipcodes, radius } = req.query;
-        let zipArray = getZipIntArrayFromString(zipcodes);
+
+        // let zipArray = getZipIntArrayFromString(zipcodes);
+        let zipArray = zipcodes;
         if (zipArray.length === 0) throw "FAILURE";
 
-        if (zipArray.length > 39) {
-            zipArray = sliceArray(zipArray, 0, 40);
+        if (zipArray.length > 29) {
+            zipArray = sliceArray(zipArray, 0, 30);
         }
 
         const jobs = await Glassdoor.fetchGlassdoorJobs({
@@ -40,11 +38,13 @@ const getGlassdoorJobs = async function(req, res) {
 const getIndeedJobs = async function(req, res) {
     try {
         const { query, zipcodes, radius } = req.query;
-        let zipArray = getZipIntArrayFromString(zipcodes);
+
+        // let zipArray = getZipIntArrayFromString(zipcodes);
+        let zipArray = zipcodes;
         if (zipArray.length === 0) throw "FAILURE";
 
-        if (zipArray.length > 39) {
-            zipArray = sliceArray(zipArray, 0, 40);
+        if (zipArray.length > 29) {
+            zipArray = sliceArray(zipArray, 0, 30);
         }
 
         const jobs = await Indeed.fetchIndeedJobs({
@@ -69,11 +69,13 @@ const getIndeedJobs = async function(req, res) {
 const getLinkedinJobs = async function(req, res) {
     try {
         const { query, zipcodes } = req.query;
-        let zipArray = getZipIntArrayFromString(zipcodes);
+
+        // let zipArray = getZipIntArrayFromString(zipcodes);
+        let zipArray = zipcodes;
         if (zipArray.length === 0) throw "FAILURE";
 
-        if (zipArray.length > 39) {
-            zipArray = sliceArray(zipArray, 0, 40);
+        if (zipArray.length > 29) {
+            zipArray = sliceArray(zipArray, 0, 30);
         }
 
         const jobs = await Linkedin.fetchLinkedinJobs({

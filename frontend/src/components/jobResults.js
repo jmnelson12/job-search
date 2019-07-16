@@ -4,10 +4,6 @@ const JobItem = React.lazy(() => import("./jobItem"));
 const JobResults = ({ state }) => {
     const { isLoading, jobsPayload } = state;
 
-    if (jobsPayload) {
-        console.log(jobsPayload);
-    }
-
     return (
         <div className="job-results-wrapper">
             {isLoading ? (
