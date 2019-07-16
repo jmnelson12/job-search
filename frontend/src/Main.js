@@ -17,6 +17,19 @@ const Main = () => {
                 <div className="global-loader">Loading...</div>
             ) : (
                 <>
+                    <div className="instructions">
+                        <h2>Instructions:</h2>
+                        <ul>
+                            <li>
+                                Resize page (zoom in and out) to view map. Weird
+                                Leaflet map bug. Couldn't find fix
+                            </li>
+                            <li>
+                                Select area using top right (pentagon) button
+                            </li>
+                            <li>Search</li>
+                        </ul>
+                    </div>
                     <ConfigProvider>
                         <LeafletMap />
                         <Jobs />

@@ -41,3 +41,9 @@ body {
 .Main {
     padding-top: 15px;
 }
+
+.instructions {
+    margin-bottom: 20px;
+    color: var(--white);
+    line-height: 28px;
+}
